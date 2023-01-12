@@ -1,0 +1,10 @@
+<template>
+    <div class="hoverable" style="height: 100%; display: flex; flex-direction: column; align-items: center; 
+    padding-bottom: 0.5em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)" onclick={navigateToDetail}>
+        <div style={imgStyle}></div>
+        <div style="display:flex; flex-direction: column; justify-content: space-between; padding: 0em 1em;">
+            <p style="min-height: 4em; font-weight: bold;">{product.Name}</p>
+            <p style="text-align:center; font-weight: bold;">{price} €</p>
+        </div>
+    </div>
+</template>

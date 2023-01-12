@@ -1,0 +1,19 @@
+.cut-text { 
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden; 
+}
+
+.shadow{
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+}
+
+.hoverable{
+    transition: box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+}
+
+.hoverable:hover{
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+}
