@@ -1,0 +1,27 @@
+<template>
+    <lightning-layout horizontal-align="center">
+        <lightning-layout-item size="8">
+            <lightning-layout>
+                <lightning-layout-item size="6">
+                    <div style="width: 100%; display:flex; flex-direction:column; align-items: center; gap:1em;">
+                        <img src={currentImage} style="margin: 0 auto; height:300px; width: 300px;">
+                        <template if:true={showImages}>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; row-gap: 1em; column-gap: 1em;">
+                                <template for:each={images} for:item="image">
+                                    <div data-image-url={image.ContentDownloadUrl} key={image.id} 
+                                    style={image.imageStyle} class="hoverable" onmouseover={setPrimaryImage}></div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="6">
+                    <p class="info-style"><b>{product.Name}</b></p>
+                    <p class="info-style">Price: <b>{price} €</b></p>
+                    <p class="info-style">Product Code: <b>{product.ProductCode}</b></p>
+                    <p class="info-style" style="white-space: pre-wrap;">{product.Description}</p>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
