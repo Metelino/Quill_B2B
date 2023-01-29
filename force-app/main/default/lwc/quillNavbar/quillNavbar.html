@@ -1,34 +1,35 @@
 <template>
-    <div style="position: is-realtive">
-            <lightning-layout vertical-align="center" horizontal-align="center">
-                <lightning-layout-item padding="around-small" size="2">
-                    <img src={brandUrl} style="height: 50px;"/>        
-                </lightning-layout-item>
-                <lightning-layout-item padding="around-small" size="4">
-                    <nav style="display:flex; flex-direction:row; justify-content:center;">
-                        <span class="hoverable" style="padding:0.75em">Home</span>
-                        <span class="hoverable" style="padding:0.75em">Products</span>
-                    </nav>
-                </lightning-layout-item>
-                <lightning-layout-item padding="around-small" size="4">
-                    <div style="display:flex; flex-direction:row; justify-content:center;">
-                        <div style="padding: 0.25em 0.5em; background-color: white; border-radius: 1em 0px 0px 1em;">
-                            <lightning-icon size="small" icon-name="utility:search"></lightning-icon>
-                        </div>
-                        <input style="flex-grow: 1; border: 0px; border-radius: 0px 1em 1em 0px; padding: 0.25em;" type="text" placeholder="Search Product">
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item padding="around-small" size="2">
-                    <div style="display:flex; flex-direction:row; justify-content:space-around; align-items:center">
-                        <lightning-button-menu alternative-text="Show menu" variant="border-filled" icon-name="utility:settings" icon-size="large">
-                            <lightning-menu-item value="MenuItemOne" label="Account"></lightning-menu-item>
-                            <lightning-menu-item value="MenuItemTwo" label="Log Out"></lightning-menu-item>
-                            <lightning-menu-item value="MenuItemThree" label="Menu Item Three"></lightning-menu-item>
-                            <lightning-menu-item value="MenuItemFour" label="Menu Item Four"></lightning-menu-item>
-                        </lightning-button-menu>
-                        <lightning-button-icon size="large" icon-name="utility:cart"></lightning-button-icon>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-    </div>
+  <div class="shadow slds-box">
+    <lightning-layout vertical-align="center" horizontal-align="center">
+      <lightning-layout-item padding="around-small" size="2">
+        <img src={brandUrl} style="height: 50px;" />
+      </lightning-layout-item>
+      <lightning-layout-item padding="around-small" size="4">
+        <nav style="display:flex; flex-direction:row; justify-content:center;">
+          <a class="hoverable" style="padding:0.75em" href='/'>Home</a>
+          <a class="hoverable" style="padding:0.75em" href={productsUrl}>Products</a>
+        </nav>
+      </lightning-layout-item>
+      <lightning-layout-item padding="around-small" size="4">
+        <div style="display:flex; flex-direction:row; justify-content:center; border: 2px solid black;">
+          <div style="padding: 0.5em 0.5em; background-color: white;">
+            <lightning-icon size="small" icon-name="utility:search"></lightning-icon>
+          </div>
+          <input style="flex-grow: 1;  padding: 0.25em; border: 0px;" type="text" placeholder="Search Product"
+            onkeydown={searchProducts}>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item size="2">
+        <div style="display:flex; flex-direction:row; justify-content:flex-end; align-items:stretch; margin-right:1em;">
+          <lightning-button-menu class="slds-dropdown_right" variant="container" alternative-text="Show menu"
+            icon-name="utility:user" size="large">
+            <lightning-menu-item value="MenuItemOne" label="Account"
+              onclick={navigateToOrderHistory}></lightning-menu-item>
+            <lightning-menu-item value="MenuItemTwo" label="Log Out" href={logoutUrl}></lightning-menu-item>
+          </lightning-button-menu>
+          <c-quill-cart></c-quill-cart>
+        </div>
+      </lightning-layout-item>
+    </lightning-layout>
+  </div>
 </template>

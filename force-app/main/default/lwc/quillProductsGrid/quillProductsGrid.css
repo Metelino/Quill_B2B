@@ -1,0 +1,11 @@
+.shadow{
+    /* -webkit-box-shadow: 0px 15px 16px 1px rgba(66, 68, 90, 0.28);
+    -moz-box-shadow: 0px 15px 16px 1px rgba(66, 68, 90, 0.28);
+    box-shadow: 0px 15px 16px 1px rgba(66, 68, 90, 0.28); */
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}

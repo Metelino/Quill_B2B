@@ -1,27 +1,51 @@
 <template>
-    <lightning-layout horizontal-align="center">
-        <lightning-layout-item size="8">
-            <lightning-layout>
-                <lightning-layout-item size="6">
-                    <div style="width: 100%; display:flex; flex-direction:column; align-items: center; gap:1em;">
-                        <img src={currentImage} style="margin: 0 auto; height:300px; width: 300px;">
-                        <template if:true={showImages}>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; row-gap: 1em; column-gap: 1em;">
-                                <template for:each={images} for:item="image">
-                                    <div data-image-url={image.ContentDownloadUrl} key={image.id} 
-                                    style={image.imageStyle} class="hoverable" onmouseover={setPrimaryImage}></div>
-                                </template>
-                            </div>
-                        </template>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item size="6">
-                    <p class="info-style"><b>{product.Name}</b></p>
-                    <p class="info-style">Price: <b>{price} €</b></p>
-                    <p class="info-style">Product Code: <b>{product.ProductCode}</b></p>
-                    <p class="info-style" style="white-space: pre-wrap;">{product.Description}</p>
-                </lightning-layout-item>
-            </lightning-layout>
+  <c-quill-toast timeout="5000" sticky="false"></c-quill-toast>
+  <lightning-layout horizontal-align="center" style="margin-top: 3em;">
+    <lightning-layout-item size="10">
+      <lightning-layout multiple-rows>
+
+        <lightning-layout-item size="6" padding="around-small">
+          <div style="width: 100%; display:flex; flex-direction:column; align-items: center; gap:1em;">
+            <img class="slds-box slds-theme_default shadow" src={currentImage} style="margin: 0 auto; height:350px; width: 350px; padding: 1em;">
+            <template if:true={showImages}>
+              <div class="slds-box slds-theme_default" 
+                style="margin-top: 1em; display: flex; flex-direction:row; align-items: center; overflow-x: auto; gap: 1em;">
+                <template for:each={images} for:item="image">
+                  <div data-image-url={image.ContentDownloadUrl} key={image.id} 
+                  style={image.imageStyle} class="hoverable" onmouseover={setPrimaryImage}></div>
+                </template>
+              </div>
+            </template>
+          </div>
         </lightning-layout-item>
-    </lightning-layout>
+
+        <lightning-layout-item size="6" padding="around-small">
+          <div class="slds-box slds-theme_default">
+            <p class="info-style slds-text-heading_medium">Product Information</p>
+            <p class="info-style" style="padding: 1em;">
+              <span class="slds-text-heading_small">Name: <b>{product.Name}</b></span><br>
+              <span class="slds-text-heading_small">Price: <b>{price} &euro;</b></span><br>
+              <span class="slds-text-heading_small">Product Code: <b>{product.ProductCode}</b></span><br>
+            </p>
+            <p class="slds-text-body_regular" style="white-space: pre-wrap; padding: 0.5em">{product.Description}</p>
+            <button type="button" style="margin-top: 1em;" class="slds-button slds-button_neutral slds-button_stretch slds-button_success" 
+              onclick={addProductToStorage}>Add To Cart</button>
+          </div>
+        </lightning-layout-item>
+
+      </lightning-layout>
+    </lightning-layout-item>
+  </lightning-layout>
+  <lightning-layout horizontal-align="center" style="margin-bottom: 3em;">
+    <lightning-layout-item size="10">
+      <lightning-layout>
+        <lightning-layout-item size="6" padding="around-small">
+          <c-quill-product-review-form product-id={productId}></c-quill-product-review-form>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" padding="around-small">
+          <c-quill-product-reviews product-id={productId}></c-quill-product-reviews>
+        </lightning-layout-item>
+      </lightning-layout>
+    </lightning-layout-item>
+  </lightning-layout>
 </template>

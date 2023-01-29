@@ -1,9 +1,11 @@
 import { LightningElement, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { publish, MessageContext } from 'lightning/messageService';
 
 import getProductDetail from '@salesforce/apex/Quill_ProductsController.getProductDetail';
 import getProductImages from '@salesforce/apex/Quill_ProductImagesController.getProductImages';
+import cartChannel from '@salesforce/messageChannel/QuillCartUpdateChannel__c';
 
 export default class QuillProductDetail extends LightningElement {
     productId;
@@ -12,14 +14,19 @@ export default class QuillProductDetail extends LightningElement {
     price;
     images = [];
     currentImage;
+    isProductInStorage = true;
+
+    @wire(MessageContext) 
+    messageContext;
 
     @wire(CurrentPageReference)
     currentPageReference;
 
     connectedCallback() {
-        // this.productId = this.getQueryProductId();
         this.productId = this.currentPageReference.state.productId;
-        console.log(this.productId);
+
+        const products = JSON.parse(localStorage.getItem('products'));
+        this.isProductInStorage = this.productId in products; 
 
         let getImages = getProductImages({
             productId: this.productId
@@ -43,9 +50,6 @@ export default class QuillProductDetail extends LightningElement {
                 background-size: 100% 100%;
                 width: 100px; height: 100px;
                 `}));
-            for(let image of images){
-                console.log(image.Id);
-            }
             this.images = images;
         })
         .catch(e => {
@@ -57,16 +61,23 @@ export default class QuillProductDetail extends LightningElement {
     }
 
     get showImages(){
-        return this.images.length > 1;
+        return this.images.length >= 1;
     }
 
     showNotification(title, message, variant) {
         const evt = new ShowToastEvent({
             title: title,
             message: message,
-            variant: variant
+            variant: variant,
         });
         this.dispatchEvent(evt);
+        console.log("INSIDE TOAST");
+    }
+
+    showQuillNotification(variant, message){
+        this.template
+        .querySelector("c-quill-toast")
+        .showToast(variant, message);
     }
 
     setPrimaryImage(e){
@@ -74,16 +85,26 @@ export default class QuillProductDetail extends LightningElement {
         this.currentImage = imageUrl;
     }
 
-    // getQueryProductId() {
-    //     let params;
-    //     let search = location.search.substring(1);
+    addProductToStorage(){
+        let products = JSON.parse(localStorage.getItem('products'));
 
-    //     if (search) {
-    //         params = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', (key, value) => {
-    //             return key === "" ? value : decodeURIComponent(value)
-    //         });
-    //     }
+        if(!products){
+            products = {};
+        }
 
-    //     return params[0];
-    // }
+        if(this.productId in products){
+            this.showQuillNotification('info', "Product Is Already In Cart");
+            return;
+        }
+
+        products[this.product.Id] = {amount: 1, product: this.product};
+        localStorage.setItem('products', JSON.stringify(products));
+        this.isProductInStorage = true;
+        this.updateCart();
+        this.showQuillNotification('success', "Product Has Been Added To Cart");
+    }
+
+    updateCart(){
+        publish(this.messageContext, cartChannel, {});
+    }
 }

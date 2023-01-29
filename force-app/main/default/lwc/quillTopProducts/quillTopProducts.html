@@ -1,37 +1,21 @@
 <template>
-  <div style="position: relative; margin-bottom: 1em">
-    <lightning-layout horizontal-align="center">
-      <lightning-layout-item size="10" padding="around-medium">
-        <p
-          class="slds-text-heading_medium"
-          style="
-            margin-bottom: 1em;
-            padding: 0.5em;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-          "
-        >
-          Top 5 Selling Products
-        </p>
-        <div
-          style="
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            grid-auto-rows: 1fr;
-            row-gap: 1em;
-            column-gap: 1em;
-          "
-        >
-          <template for:each={products} for:item="product">
-            <c-quill-product-tile
-              key={product.Id}
-              product={product}
-            ></c-quill-product-tile>
-          </template>
-        </div>
-      </lightning-layout-item>
-    </lightning-layout>
-    <template if:true={isLoading}>
-      <c-quill-spinner position="absolute"></c-quill-spinner>
-    </template>
-  </div>
+    <div style="position:relative; margin-bottom: 1em;">
+        <lightning-layout horizontal-align="center">
+            <lightning-layout-item size="10" padding="around-medium">
+                <p class="slds-text-heading_medium" 
+                    style="margin-bottom: 1em; padding: 0.5em; border-bottom: 1px solid rgba(0, 0, 0, 0.25);">
+                    Top 5 Selling Products
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+                    grid-auto-rows: 1fr; row-gap: 1em; column-gap: 1em;">
+                    <template for:each={products} for:item="product">
+                        <c-quill-product-tile key={product.Id} product={product}></c-quill-product-tile>
+                    </template>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template if:true={isLoading}>
+            <c-quill-spinner position="absolute"></c-quill-spinner>
+        </template>
+    </div>
 </template>

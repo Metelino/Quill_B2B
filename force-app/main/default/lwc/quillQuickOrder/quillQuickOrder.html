@@ -1,0 +1,18 @@
+<template>
+    <form>
+        <p><b>Quick Order</b></p>
+        <p>Place order with product codes</p>
+        <div style="display:grid; grid-template-columns: 2fr 1fr; grid-auto-rows: 1fr; row-gap: 1em; column-gap: 1em;
+            padding: 0.5em;">
+            <template for:each={dummyCountList} for:item="i">
+                <input type="text" key={i} required="" class="slds-input"/>
+                <input type="number" key={i} step="1" required="" class="slds-input" />
+            </template>
+        </div>
+        <div style="display:flex; flex-direction:row; align-items: center;">
+            <button class="slds-button slds-button_neutral" style="flex-grow: 1;">Add Row</button>
+            <button class="slds-button slds-button_text-destructive" style="flex-grow: 1;">Remove Row</button>
+        </div>
+        <button class="slds-button slds-button_success slds-button_stretch">Place Order</button>
+    </form>
+</template>

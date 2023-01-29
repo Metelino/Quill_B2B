@@ -1,53 +1,38 @@
 <template>
+
   <template if:true={recurringOrders.length}>
     <template for:each={recurringOrders} for:item="order">
-      <div
-        class="slds-box shadow slds-theme_default"
-        style="margin-bottom: 1em; position: relative"
-        key={order.Id}
-      >
+      <div class="slds-box shadow slds-theme_default" style="margin-bottom: 1em; position:relative;" key={order.Id}>
         <template if:true={order.Is_Recurring_Order_Active__c}>
-          <button
-            type="button"
-            class="slds-button slds-button_neutral"
-            style="position: absolute; top: 1em; right: 1em"
-            data-id={order.Id}
-            onclick={showModal}
-          >
+          <button type="button" class="slds-button slds-button_neutral" style="position:absolute; top: 1em; right: 1em;"
+            data-id={order.Id} onclick={showModal}>
             Cancel Subscription
           </button>
         </template>
 
-        <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
+        <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25);">
           <template if:true={order.Is_Recurring_Order_Active__c}>
-            <span><b>Subscription Active</b></span
-            ><br />
+            <span><b>Subscription Active</b></span><br>
           </template>
           <template if:false={order.Is_Recurring_Order_Active__c}>
-            <span><b>Subscription Cancelled</b></span
-            ><br />
+            <span><b>Subscription Cancelled</b></span><br>
           </template>
-          <span>Status: <b>{order.Status}</b></span
-          ><br />
+          <span>Status: <b>{order.Status}</b></span><br>
           <span>Order Issuing Date: <b>{order.EffectiveDate}</b></span>
         </p>
 
-        <table
-          class="slds-box slds-table slds-table_cell-buffer slds-text-body_regular slds-table_bordered slds-no-row-hover slds-table_header-hidden"
-          style="margin-top: 1em"
-        >
+        <table class="slds-box slds-table slds-table_cell-buffer slds-text-body_regular 
+           slds-table_bordered slds-no-row-hover slds-table_header-hidden" style="margin-top:1em;">
           <tbody>
             <template for:each={order.OrderItems.records} for:item="item">
               <tr key={item.Product2.Id}>
                 <td>
-                  <img src={item.Product2.DisplayUrl} style="max-width: 50px" />
+                  <img src={item.Product2.DisplayUrl} style="max-width: 50px;" />
                 </td>
                 <td>
-                  <a data-id={item.Product2Id} onclick={navigateToDetail}
-                    >{item.Product2.Name}</a
-                  >
+                  <a data-id={item.Product2Id} onclick={navigateToDetail}>{item.Product2.Name}</a>
                 </td>
-                <td style="text-align: right">
+                <td style="text-align: right;">
                   {item.Quantity} x {item.UnitPrice} €
                 </td>
               </tr>
@@ -55,46 +40,25 @@
           </tbody>
         </table>
 
-        <div class="slds-box" style="margin-top: 1em">
+        <div class="slds-box" style="margin-top:1em;">
           <lightning-accordion allow-multiple-sections-open>
             <lightning-accordion-section label="Monthly Orders">
-              <p
-                style="
-                  padding: 1em;
-                  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-                "
-              >
-                <span>Order Number: <b>{order.OrderNumber}</b></span
-                ><br />
-                <span
-                  >Order Scope
-                  <b>{order.EffectiveDate} - {order.EndDate}</b></span
-                >
+              <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
+                <span>Order Number: <b>{order.OrderNumber}</b></span><br>
+                <span>Order Scope <b>{order.EffectiveDate} - {order.EndDate}</b></span>
               </p>
               <template if:true={order.Orders__r}>
-                <template
-                  for:each={order.Orders__r.records}
-                  for:item="subOrder"
-                >
-                  <p
-                    key={subOrder.Id}
-                    style="
-                      padding: 1em;
-                      border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-                    "
-                  >
-                    <span>Order Number: <b>{subOrder.OrderNumber}</b></span
-                    ><br />
-                    <span
-                      >Order Scope:
-                      <b>{subOrder.EffectiveDate} - {subOrder.EndDate}</b></span
-                    >
+                <template for:each={order.Orders__r.records} for:item="subOrder">
+                  <p key={subOrder.Id} style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
+                    <span>Order Number: <b>{subOrder.OrderNumber}</b></span><br>
+                    <span>Order Scope: <b>{subOrder.EffectiveDate} - {subOrder.EndDate}</b></span>
                   </p>
                 </template>
               </template>
             </lightning-accordion-section>
           </lightning-accordion>
         </div>
+
       </div>
     </template>
   </template>
@@ -106,51 +70,24 @@
   </template>
 
   <template if:true={isModalShown}>
-    <section
-      role="dialog"
-      tabindex="-1"
-      aria-modal="true"
-      style="z-index: 200"
-      class="slds-modal slds-fade-in-open slds-modal_medium"
-    >
-      <div class="slds-modal__container" style="position: relative">
+    <section role="dialog" tabindex="-1" aria-modal="true" style="z-index: 200;"
+      class="slds-modal slds-fade-in-open slds-modal_medium">
+      <div class="slds-modal__container" style="position:relative">
         <div class="slds-modal__header">
-          <h1
-            id="modal-heading-01"
-            class="slds-modal__title slds-hyphenate"
-            style="text-align: left"
-          >
-            Cancel Subscription
-          </h1>
+          <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" style="text-align: left">Cancel
+            Subscription</h1>
         </div>
-        <div
-          class="slds-modal__content slds-p-around_medium"
-          id="modal-content-id-1"
-        >
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
           Are you sure you want to cancel this subscription?
         </div>
         <div class="slds-modal__footer">
-          <button
-            class="slds-button slds-button_neutral"
-            aria-label="Cancel and close"
-            onclick={closeModal}
-          >
-            Cancel
-          </button>
-          <button
-            class="slds-button slds-button_brand"
-            onclick={cancelRecurringOrder}
-          >
-            Confirm
-          </button>
+          <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+            onclick={closeModal}>Cancel</button>
+          <button class="slds-button slds-button_brand" onclick={cancelRecurringOrder}>Confirm</button>
         </div>
       </div>
     </section>
-    <div
-      class="slds-backdrop slds-backdrop_open"
-      style="z-index: 100"
-      role="presentation"
-    ></div>
+    <div class="slds-backdrop slds-backdrop_open" style="z-index: 100" role="presentation"></div>
   </template>
 
   <c-quill-toast sticky="false" timeout="3000"></c-quill-toast>
@@ -158,4 +95,5 @@
   <template if:true={isLoading}>
     <c-quill-spinner position="fixed"></c-quill-spinner>
   </template>
+
 </template>

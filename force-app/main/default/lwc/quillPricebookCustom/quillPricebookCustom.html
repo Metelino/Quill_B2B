@@ -1,39 +1,23 @@
 <template>
   <div class="slds-m-horizontal_medium">
+
     <template if:true={pricebook}>
-      <div
-        class="slds-scrollable_y"
-        style="max-height: 60vh; position: relative"
-      >
-        <table
-          data-selected
-          class="slds-table slds-table_cell-buffer slds-table_bordered"
-          style="width: 100%"
-        >
-          <thead style="position: sticky; top: 0px; z-index: 2; width: 100%">
+      <div class="slds-scrollable_y" style="max-height: 60vh; position:relative;">
+        <table data-selected class="slds-table slds-table_cell-buffer slds-table_bordered" style="width: 100%;">
+          <thead style="position:sticky; top:0px; z-index: 2; width:100%;">
             <tr class="slds-line-height_reset">
               <th style="text-align: center">
                 <div>Product Name</div>
               </th>
               <th style="text-align: center">
-                <span>Discount Value</span><br />
-                <input
-                  class="slds-input"
-                  type="number"
-                  step="0.01"
-                  style="width: 12ch"
-                  onkeydown={setDiscountValueForAll}
-                />
+                <span>Discount Value</span><br>
+                <input class="slds-input" type="number" step="0.01" style="width: 12ch;"
+                  onkeydown={setDiscountValueForAll}>
               </th>
               <th style="text-align: center">
                 <div>
-                  <span>Is Percent Discount</span><br />
-                  <input
-                    type="checkbox"
-                    class="slds-checkbox"
-                    checked
-                    onchange={setDiscountTypeForAll}
-                  />
+                  <span>Is Percent Discount</span><br>
+                  <input type="checkbox" class="slds-checkbox" checked onchange={setDiscountTypeForAll} />
                 </div>
               </th>
               <th style="text-align: center">
@@ -42,33 +26,18 @@
             </tr>
           </thead>
           <tbody>
-            <template
-              for:each={pricebook.PricebookEntries.records}
-              for:item="item"
-            >
+            <template for:each={pricebook.PricebookEntries.records} for:item="item">
               <tr key={item.Id}>
-                <td class="slds-truncate" style="overflow-x: hidden">
+                <td class="slds-truncate" style="overflow-x: hidden;">
                   <span>{item.Product2.Name}</span>
                 </td>
                 <td style="text-align: center">
-                  <input
-                    class="slds-input"
-                    type="number"
-                    step="0.01"
-                    value={item.Discount__c}
-                    data-id={item.Id}
-                    onchange={changeDiscountValue}
-                    style="width: 12ch"
-                  />
+                  <input class="slds-input" type="number" step="0.01" value={item.Discount__c} data-id={item.Id}
+                    onchange={changeDiscountValue} style="width: 12ch;"></input>
                 </td>
                 <td style="text-align: center">
-                  <input
-                    type="checkbox"
-                    class="slds-checkbox"
-                    data-id={item.Id}
-                    checked={item.Is_Percent_Discount__c}
-                    onchange={changeDiscountType}
-                  />
+                  <input type="checkbox" class="slds-checkbox" data-id={item.Id} checked={item.Is_Percent_Discount__c}
+                    onchange={changeDiscountType}></input>
                 </td>
                 <td style="text-align: center">
                   <span>{item.UnitPrice}</span>
@@ -78,13 +47,8 @@
           </tbody>
         </table>
       </div>
-      <button
-        type="button"
-        class="slds-m-top_small slds-button slds-button_neutral slds-button_stretch"
-        onclick={updatePricebook}
-      >
-        Update Pricebook
-      </button>
+      <button type="button" class="slds-m-top_small slds-button slds-button_neutral slds-button_stretch"
+        onclick={updatePricebook}>Update Pricebook</button>
     </template>
 
     <template if:false={pricebook}>
@@ -92,5 +56,6 @@
         <p class="slds-text-title">No Pricebook Selected</p>
       </div>
     </template>
+
   </div>
 </template>

@@ -1,7 +1,7 @@
-import { LightningElement } from "lwc";
+import { LightningElement } from 'lwc';
 
 export default class QuillAccount extends LightningElement {
-  refreshCases() {
-    this.template.querySelector("c-quill-cases").refreshCases();
-  }
+    refreshCases(){
+        this.template.querySelector('c-quill-cases').refreshCases();
+    }
 }

@@ -1,141 +1,139 @@
-import { LightningElement, wire, track } from "lwc";
-import { NavigationMixin, CurrentPageReference } from "lightning/navigation";
+import { LightningElement, wire, track } from 'lwc';
+import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 
-import {
-  MessageContext,
-  subscribe,
-  unsubscribe,
-  APPLICATION_SCOPE
-} from "lightning/messageService";
+import { 
+    publish, 
+    MessageContext ,
+    subscribe,
+    unsubscribe,
+    APPLICATION_SCOPE
+} from 'lightning/messageService';
 
-import cartChannel from "@salesforce/messageChannel/QuillCartUpdateChannel__c";
+
+import cartChannel from '@salesforce/messageChannel/QuillCartUpdateChannel__c';
 
 export default class QuillCart extends NavigationMixin(LightningElement) {
-  @track
-  products;
+    @track
+    products;
 
-  @wire(CurrentPageReference)
-  currentPageReference;
+    @wire(CurrentPageReference) 
+    currentPageReference;
 
-  @wire(MessageContext)
-  messageContext;
+    @wire(MessageContext) 
+    messageContext;
 
-  subscription = null;
-  totalPrice;
-  isCartExpanded = false;
+    subscription = null;
+    totalPrice;
+    isCartExpanded = false;
 
-  connectedCallback() {
-    this.getStoredProducts();
-    this.subscribeToCartChannel();
-  }
-
-  disconnectedCallback() {
-    this.unsubscribeToCartChannel();
-  }
-
-  subscribeToCartChannel() {
-    if (!this.subscription) {
-      this.subscription = subscribe(
-        this.messageContext,
-        cartChannel,
-        () => {
-          this.getStoredProducts();
-        },
-        { scope: APPLICATION_SCOPE }
-      );
+    connectedCallback(){
+        this.getStoredProducts();
+        this.subscribeToCartChannel();
     }
-  }
 
-  unsubscribeToCartChannel() {
-    unsubscribe(this.subscription);
-    this.subscription = null;
-  }
-
-  getStoredProducts() {
-    const products = JSON.parse(localStorage.getItem("products"));
-    if (!products) {
-      this.products = {};
-    } else {
-      this.products = products;
+    disconnectedCallback() {
+        this.unsubscribeToCartChannel();
     }
-    console.log(products);
-  }
 
-  get isCartDisabled() {
-    return this.currentPageReference.attributes.name === "order_summary__c";
-  }
+    subscribeToCartChannel() {
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                cartChannel,
+                (message) => {
+                    this.getStoredProducts();
+                },
+                { scope: APPLICATION_SCOPE }
+            );
+        }
+    }
 
-  get productsList() {
-    let prodList = [...Object.values(this.products)];
-    this.totalPrice = 0;
+    unsubscribeToCartChannel() {
+        unsubscribe(this.subscription);
+        this.subscription = null;
+    }
 
-    prodList = prodList.map((item) => {
-      const newItem = { ...item };
-      const price = item.product.PricebookEntries.records[0].UnitPrice;
-      newItem.price = price;
-      newItem.total = Math.ceil(price * item.amount * 100) / 100;
-      this.totalPrice += newItem.total;
-      return newItem;
-    });
-    this.totalPrice = Math.ceil(this.totalPrice * 100) / 100;
-    return prodList;
-  }
+    getStoredProducts(){
+        const products = JSON.parse(localStorage.getItem('products'));
+        if(!products){
+            this.products = {};
+        }else{
+            this.products = products;
+        }
+        console.log(products);
+    }
 
-  toggleCart() {
-    this.isCartExpanded = !this.isCartExpanded;
-  }
+    get isCartDisabled(){
+        return this.currentPageReference.attributes.name === 'order_summary__c'
+    }
 
-  collapseCart() {
-    this.isCartExpanded = false;
-  }
+    get productsList(){
+        let prodList = [...Object.values(this.products)];
+        this.totalPrice = 0;
 
-  saturateInput(value) {
-    if (value < 0) return 0;
-    if (value > 1000) return 1000;
-    return value;
-  }
+        prodList = prodList.map((item => {
+            const newItem = {...item};
+            const price = item.product.PricebookEntries.records[0].UnitPrice;
+            newItem['price'] = price;
+            newItem['total'] = Math.ceil(price * item.amount * 100) / 100;
+            this.totalPrice += newItem['total'];
+            return newItem;
+        }))
+        this.totalPrice = Math.ceil(this.totalPrice * 100) / 100;
+        return prodList;
+    }
 
-  incrementItemAmount(e) {
-    const productId = e.currentTarget.dataset.productId;
-    console.log(e.currentTarget.parentElement);
-    this.products[productId].amount = this.saturateInput(
-      this.products[productId].amount + 1
-    );
-    localStorage.setItem("products", JSON.stringify(this.products));
-  }
+    toggleCart(){
+        this.isCartExpanded = !this.isCartExpanded;
+    }
 
-  decrementItemAmount(e) {
-    const productId = e.currentTarget.dataset.productId;
-    this.products[productId].amount = this.saturateInput(
-      this.products[productId].amount - 1
-    );
-    localStorage.setItem("products", JSON.stringify(this.products));
-  }
+    collapseCart(){
+        this.isCartExpanded = false;
+    }
 
-  updateItemAmount(e) {
-    const amount = this.saturateInput(e.currentTarget.value);
-    const productId = e.currentTarget.dataset.productId;
-    this.products[productId].amount = amount;
-    e.currentTarget.value = amount;
-    localStorage.setItem("products", JSON.stringify(this.products));
-  }
+    saturateInput(value){
+        if(value < 0) return 0;
+        if(value > 1000) return 1000;
+        return value;
+    }
 
-  deleteItem(e) {
-    const productId = e.currentTarget.dataset.productId;
-    delete this.products[productId];
-    localStorage.setItem("products", JSON.stringify(this.products));
-  }
+    incrementItemAmount(e){
+        const productId = e.currentTarget.dataset.productId;
+        console.log(e.currentTarget.parentElement);
+        this.products[productId].amount = this.saturateInput(this.products[productId].amount+1);
+        localStorage.setItem('products', JSON.stringify(this.products));
+    }
 
-  navigateToCheckout(searchText) {
-    this.isCartExpanded = false;
-    this[NavigationMixin.Navigate]({
-      type: "comm__namedPage",
-      attributes: {
-        name: "order_summary__c"
-      },
-      state: {
-        searchText: searchText
-      }
-    });
-  }
+    decrementItemAmount(e){
+        const productId = e.currentTarget.dataset.productId;
+        this.products[productId].amount = this.saturateInput(this.products[productId].amount-1);
+        localStorage.setItem('products', JSON.stringify(this.products));
+    }
+
+    updateItemAmount(e){
+        const amount = this.saturateInput(e.currentTarget.value);
+        const productId = e.currentTarget.dataset.productId;
+        this.products[productId].amount = amount;
+        e.currentTarget.value = amount;
+        localStorage.setItem('products', JSON.stringify(this.products));
+    }
+
+    deleteItem(e){
+        const productId = e.currentTarget.dataset.productId;
+        delete this.products[productId];
+        localStorage.setItem('products', JSON.stringify(this.products));
+    }
+
+    navigateToCheckout(searchText){
+        this.isCartExpanded = false;
+        this[NavigationMixin.Navigate]({
+            type: 'comm__namedPage',
+            attributes: {
+                name: 'order_summary__c',
+            },
+            state: {
+                searchText: searchText
+            }
+        });
+    }
 }

@@ -1,46 +1,21 @@
 <template>
-  <div
-    style="
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      row-gap: 1em;
-      column-gap: 1em;
-    "
-  >
+  <div style="display: grid; grid-template-columns: 1fr 1fr; row-gap: 1em; column-gap: 1em;">
     <template if:true={cases} for:each={cases} for:item="item">
-      <div
-        class="slds-box slds-theme_default shadow"
-        style="margin-bottom: 1em; height: fit-content"
-        key={item.id}
-      >
-        <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
-          <span class="slds-text-heading_small"
-            >Subject: <b>{item.Subject}</b></span
-          ><br />
+      <div class="slds-box slds-theme_default shadow" style="margin-bottom: 1em; height:fit-content;" key={item.id}>
+
+        <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25);">
+          <span class="slds-text-heading_small">Subject: <b>{item.Subject}</b></span><br>
           <template if:true={item.Order__r}>
-            <span>Order Number: <b>{item.Order__r.OrderNumber}</b></span
-            ><br />
+            <span>Order Number: <b>{item.Order__r.OrderNumber}</b></span><br>
           </template>
-          <span>Status: <b>{item.Status}</b></span
-          ><br />
-          <span
-            >Case Issuing Date:
-            <b
-              ><lightning-formatted-date-time
-                year="numeric"
-                month="numeric"
-                day="numeric"
-                hour="2-digit"
-                minute="2-digit"
-                time-zone="UTC"
-                value={item.CreatedDate}
-              >
-              </lightning-formatted-date-time
-            ></b>
+          <span>Status: <b>{item.Status}</b></span><br>
+          <span>Case Issuing Date: <b><lightning-formatted-date-time year="numeric" month="numeric" day="numeric"
+                hour="2-digit" minute="2-digit" time-zone="UTC" value={item.CreatedDate}>
+              </lightning-formatted-date-time></b>
           </span>
         </p>
 
-        <p style="padding: 1em">
+        <p style="padding: 1em;">
           <template if:true={item.Description}>
             <b>{item.Description}</b>
           </template>
@@ -51,26 +26,12 @@
 
         <lightning-accordion allow-multiple-sections-open>
           <lightning-accordion-section label="Comments">
+
             <template if:true={item.CaseComments.records}>
               <template for:each={item.CaseComments.records} for:item="comment">
-                <p
-                  style="
-                    padding: 1em;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-                    width: 100%;
-                  "
-                  key={comment.Id}
-                >
-                  <lightning-formatted-date-time
-                    year="numeric"
-                    month="numeric"
-                    day="numeric"
-                    hour="2-digit"
-                    minute="2-digit"
-                    time-zone="UTC"
-                    value={comment.CreatedDate}
-                  ></lightning-formatted-date-time
-                  ><br />
+                <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25); width: 100%;" key={comment.Id}>
+                  <lightning-formatted-date-time year="numeric" month="numeric" day="numeric" hour="2-digit"
+                    minute="2-digit" time-zone="UTC" value={comment.CreatedDate}></lightning-formatted-date-time><br>
                   <span>{comment.CommentBody}</span>
                 </p>
               </template>
@@ -81,6 +42,7 @@
                 No Comments
               </p>
             </template>
+
           </lightning-accordion-section>
         </lightning-accordion>
       </div>

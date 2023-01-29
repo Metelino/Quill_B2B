@@ -1,10 +1,35 @@
 <template>
-    <div class="hoverable" style="height: 100%; display: flex; flex-direction: column; align-items: center; 
-    padding-bottom: 0.5em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)" onclick={navigateToDetail}>
-        <div style={imgStyle}></div>
-        <div style="display:flex; flex-direction: column; justify-content: space-between; padding: 0em 1em;">
-            <p style="min-height: 4em; font-weight: bold;">{product.Name}</p>
-            <p style="text-align:center; font-weight: bold;">{price} €</p>
+  <!-- <div class="hoverable" style="height: 100%;"> -->
+  <div class="slds-theme_default hoverable" style="height: 100%; display: flex; flex-direction: column; align-items: flex-start; 
+   padding: 1em; border-bottom: 2px solid rgba(0, 0, 0, 0.25); position: relative;" onclick={navigateToDetail}>
+   
+    <div style={imgStyle}></div>
+    <p style="margin: 0.5em 0em; background: rgba(0, 0, 0, 0.25); height: 1px; width: 100%;"></p>
+    <p class="slds-text-heading_medium" style="font-weight: bold;">
+      <template if:true={discountPrice}>
+        <span style="text-decoration: line-through; margin-right: 1em;">
+          {standardPrice.UnitPrice}&euro;</span>
+        <span style="color: #42b883">{discountPrice.UnitPrice} &euro;</span>
+      </template>
+      <template if:false={discountPrice}>
+        <span>{standardPrice.UnitPrice} &euro;</span>
+      </template>
+    </p>
+    <p class="line-clamp slds-text-title_bold">{product.Name}</p>
+
+    <template if:true={discountPrice}>
+      <div class="slds-text-heading_small" style="position:absolute; top:0px; left: 0px; padding: 0.5em 0.25em; 
+           font-weight: bold; background: #42b883">
+        <div style="color: white; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);">
+          <span>{discountPrice.Discount__c}
+            <template if:true={discountPrice.Is_Percent_Discount__c}>%</template>
+            <template if:false={discountPrice.Is_Percent_Discount__c}>&euro;</template>
+          </span>
+          <span> OFF</span>
         </div>
-    </div>
+      </div>
+    </template>
+
+  </div>
+  <!-- </div> -->
 </template>

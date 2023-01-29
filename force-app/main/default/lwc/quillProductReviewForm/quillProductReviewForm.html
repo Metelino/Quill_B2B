@@ -1,0 +1,92 @@
+<template>
+  <div style="position: relative">
+    <lightning-card 
+      title="Your Review" icon-name="utility:edit"
+      style="position: sticky; top: 25vh; width: 100%; background: white;">
+
+      <template if:false={editDisabled}>
+        <div style="display:flex; flex-direction:column; gap:0.5em;" class="slds-m-around_small">
+          <div class="slds-box" style="display:flex; flex-direction:column;">
+            <lightning-input label="Additional Review Images" name="file uploader" multiple onchange={handleNewFiles}
+              type="file" accept=".jpg, .csv, .png, .doc, .pdf">
+            </lightning-input>
+            <template if:true={newFiles}>
+              <div class="slds-m-around_small" style="display:flex; flex-direction:row; 
+              align-items: center; gap: 0.5em; flex-wrap:wrap;">
+                <template for:each={newFiles} for:item="file">
+                  <img key={file.fileName} src={file.url} style="max-height: 100px;">
+                </template>
+              </div>
+            </template>
+          </div>
+
+          <lightning-input-rich-text onchange={setReviewText} disabled-categories="image"
+            value={newUserReview.Review_Text__c}>
+          </lightning-input-rich-text>
+        </div>
+
+        <p slot="footer">
+          <span style="display:flex; flex-direction:row;">
+            <button style="flex-grow: 1; margin-bottom: 0px;" type="button" disabled={submitDisabled}
+              class="slds-button slds-button_neutral" onclick={toggleEditor}>
+              Submit Review
+            </button>
+            <button style="flex-grow: 1; color:red; margin-bottom: 0px;" type="button"
+              class="slds-button slds-button_neutral" onclick={cancelReview}>
+              Cancel
+            </button>
+          </span>
+        </p>
+      </template>
+
+      <template if:true={editDisabled}>
+        <template if:true={userReview}>
+          <div class="slds-m-horizontal_small">
+            <template if:true={userReview.files.length}>
+              <div style="display:flex; flex-direction:row; gap: 1em; align-items: start; 
+              margin-bottom: 1em; flex-wrap: wrap;">
+                <template for:each={userReview.files} for:item="file">
+                  <img key={file} src={file} style="max-height: 150px;">
+                </template>
+              </div>
+            </template>
+            <p class="slds-text-heading_small" style="border-bottom: 1px solid rgba(0,0,0,0.25); margin-bottom: 0.5em">
+              Review
+            </p>
+            <lightning-formatted-rich-text value={userReview.review.Review_Text__c}>
+            </lightning-formatted-rich-text>
+          </div>
+        </template>
+        <template if:false={userReview}>
+          <div class="slds-box slds-theme_default slds-m-horizontal_medium">
+            <p class="slds-text-heading_medium">No Review Submitted</p>
+          </div>
+        </template>
+
+        <p slot="footer">
+          <span style="display:flex; flex-direction:row;">
+            <template if:true={editDisabled}>
+              <button style="flex-grow: 1; color:blue; margin-bottom: 0px;" type="button"
+                class="slds-button slds-button_neutral slds-m-bottom_medium" onclick={toggleEditor}>
+                Add / Edit Review
+              </button>
+            </template>
+            <template if:true={displayUserReview}>
+              <button style="flex-grow: 1; color:red; margin-bottom: 0px;" type="button"
+                class="slds-button slds-button_neutral slds-m-bottom_medium" onclick={deleteRev}>
+                Delete Review
+              </button>
+            </template>
+          </span>
+        </p>
+      </template>
+
+    </lightning-card>
+
+    <c-quill-toast sticky="true" timeout="3000"></c-quill-toast>
+
+    <template if:true={isLoading}>
+      <c-quill-spinner position="absolute"></c-quill-spinner>
+    </template>
+  </div>
+</template>

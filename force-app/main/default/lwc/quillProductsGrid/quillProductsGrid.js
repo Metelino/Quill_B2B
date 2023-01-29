@@ -46,6 +46,7 @@ export default class QuillProductsGrid extends LightningElement {
             this.categories = JSON.parse(data[1]);
         })
         .catch(error => {
+            console.log(error.body.message);
             this.showNotification('Error', error.body.message, 'warning');
         })
         .finally(() => {
@@ -88,11 +89,17 @@ export default class QuillProductsGrid extends LightningElement {
 
     filterProducts(e){
         console.log(this.searchText);
-        const inputs = this.template.querySelector('form').elements;
+        //e.preventDefault();
+        const inputCategories = this.template.querySelector('form[name="category"]').elements;
+        const inputPrices = this.template.querySelector('form[name="price-range"]').elements;
+        const minPrice = inputPrices['min'].value;
+        const maxPrice = inputPrices['max'].value;
+        console.log('MIN:' + minPrice);
+        console.log('MAX:' + maxPrice);
         //let inputs = e.currentTarget.elements;
         let pickedCategories = [];
-        console.log(inputs);
-        for(let cat of inputs){
+        console.log(inputCategories);
+        for(let cat of inputCategories){
             if(cat.checked){
                 pickedCategories.push(cat.value);
             }
@@ -101,12 +108,16 @@ export default class QuillProductsGrid extends LightningElement {
         this.isLoading = true;
         getFilteredProducts({
             searchText: this.searchText,
-            families: pickedCategories
+            families: pickedCategories,
+            minPrice: minPrice,
+            maxPrice: maxPrice
         })
         .then(data => {
             this.products = JSON.parse(data);
+            console.table(this.products);
         })
         .catch(error => {
+            console.log(error.body.message);
             this.showNotification('Error', error.body.message, 'warning');
         })
         .finally(() => {
@@ -114,6 +125,21 @@ export default class QuillProductsGrid extends LightningElement {
         })
 
     }
+
+    // replaceProductSearchUrl(searchText){
+    //     this[NavigationMixin.GenerateUrl]({
+    //         type: 'comm__namedPage',
+    //         attributes: {
+    //             name: 'products__c',
+    //         },
+    //         state: {
+    //             searchText: searchText
+    //         }
+    //     })
+    //     .then((url) => {
+    //         window.location.replace(url);
+    //     });
+    // }
 
     get searchedText(){
         if(this.searchText){

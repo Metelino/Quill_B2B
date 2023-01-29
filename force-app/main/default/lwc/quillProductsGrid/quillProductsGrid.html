@@ -1,46 +1,67 @@
 <template>
-    <div style="width:100%; height:100%; position:relative;">
-    <lightning-layout>
-        <lightning-layout-item padding="around-small" style="position:relative;" size="3">
-            <div style="position:sticky; top: 1em;">
-                <p><b>Searching: {searchedText}</b></p>
-                <form onchange={filterProducts}>
-                    <fieldset class="slds-form-element">
-                    <legend class="slds-form-element__legend slds-form-element__label">Categories</legend>
+  <div style="width:100%; height:100%; position:relative; margin: 3em 0px;">
+    <lightning-layout horizontal-align="center">
+      <lightning-layout-item size="10">
+        <lightning-layout>
+          <lightning-layout-item padding="horizontal-small" style="position:relative;" size="3">
+            <div style="position:sticky; top: 20vh;">
+              <p class="slds-box slds-theme_default shadow">
+                <span class="slds-text-heading_small">Searching:<br><b>{searchedText}</b></span>
+              </p>
+              <div class="slds-box slds-theme_default shadow">
+                <form onchange={filterProducts} name="category">
+                  <fieldset class="slds-form-element">
+                    <p class="slds-text-heading_small">Categories</p>
                     <template for:each={categories} for:item="cat">
-                        <div class="slds-form-element__control" key={cat.label}>
-                            <div class="slds-checkbox">
-                                <input type="checkbox" name="options" id={cat.label} value={cat.label}/>
-                                <label class="slds-checkbox__label" for={cat.label}>
-                                <span class="slds-checkbox_faux"></span>
-                                <span class="slds-form-element__label">{cat.label}</span>
-                                </label>
-                            </div>
+                      <div class="slds-form-element__control" key={cat.label}>
+                        <div class="slds-checkbox">
+                          <input type="checkbox" name="options" id={cat.label} value={cat.label} />
+                          <label class="slds-checkbox__label" for={cat.label}>
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-form-element__label">{cat.label}</span>
+                          </label>
                         </div>
+                      </div>
                     </template>
-                    </fieldset>
+                  </fieldset>
                 </form>
+              </div>
+              <div class="slds-box slds-theme_default shadow">
+                <form name="price-range" onsubmit={filterProducts}>
+                  <p class="slds-text-heading_small">Price Range</p>
+                  <div style="display:flex; flex-direction:row; align-items: center;">
+                    <input class="slds-input" type="number" name="min" step="0.01" style="flex-grow: 1"></input>
+                    <span style="padding:1em;"><b>&mdash;</b></span>
+                    <input class="slds-input" type="number" name="max" step="0.01" style="flex-grow: 1"></input>
+                  </div>
+                  <button type="button" onclick={filterProducts}
+                    class="slds-button slds-button_neutral slds-button_stretch">Set Price Range</button>
+                </form>
+              </div>
             </div>
-        </lightning-layout-item>
-        <lightning-layout-item style="position:relative;" size="9">
+          </lightning-layout-item>
+          <lightning-layout-item style="position:relative;" size="9">
             <template if:true={products.length}>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; grid-auto-rows: 1fr; row-gap: 1em; column-gap: 1em;">
-                    <template for:each={products} for:item="product">
-                        <c-quill-product-tile key={product.id} product={product}></c-quill-product-tile>
-                    </template>
-                </div>
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-auto-rows: 1fr; row-gap: 1em; column-gap: 1em;">
+                <template for:each={products} for:item="product">
+                  <c-quill-product-tile key={product.id} product={product}></c-quill-product-tile>
+                </template>
+              </div>
             </template>
             <template if:false={products.length}>
-                <div style="display:flex; height:100%; flex-direction: column; justify-content: center">
-                    <p style="text-align: center; font-weight: bold; font-size: 1.5em;">No Products Matching Given Criteria</p>
-                </div>
+              <div style="display:flex; height:100%; flex-direction: column; justify-content: center">
+                <p style="text-align: center; font-weight: bold; font-size: 1.5em;">No Products Matching Given Criteria
+                </p>
+              </div>
             </template>
-        </lightning-layout-item>
+          </lightning-layout-item>
+        </lightning-layout>
+      </lightning-layout-item>
     </lightning-layout>
+
     <template if:true={isLoading}>
-        <div style="position: absolute; top:0px; bottom:0px; left: 0px; right: 0px; background: rgba(0,0,0, 0.20)"></div>
-        <lightning-spinner variant="brand" size="medium"></lightning-spinner>
-        <!-- <lightning-spinner class="slds-is-fixed" alternative-text="Loading" variant="brand"></lightning-spinner> -->
+      <c-quill-spinner></c-quill-spinner>
     </template>
-    </div>
+  </div>
 </template>

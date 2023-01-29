@@ -1,0 +1,64 @@
+<template>
+  <div style="position:relative">
+
+    <lightning-card title="Other Reviews" icon-name="utility:display_text">
+      <div slot="actions">
+        <div class="slds-form-element" style="margin-bottom: 0px;">
+          <div class="slds-form-element__control">
+            <div class="slds-checkbox">
+              <input class="slds-input" type="checkbox" name="only-with-images" onchange={toggleImageReviews}
+                id="only-with-images" />
+              <label class="slds-checkbox__label" for="only-with-images">
+                <span class="slds-checkbox_faux"></span>
+                <span class="slds-form-element__label">Only Reviews With Images</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <template if:true={filteredReviews.length}>
+        <div class="slds-p-around_small">
+
+          <template for:each={filteredReviews} for:item="rev">
+            <div key={rev.review.id} class="slds-m-around_medium">
+              <p class="slds-text-title_caps" style="margin-bottom: 0.5em;">
+                <b>{rev.review.Owner.Name}</b>
+              </p>
+              <div class="slds-box">
+                <template if:true={rev.files.length}>
+                  <div style="display:flex; flex-direction:row; gap: 1em; align-items: start; 
+                            margin-bottom: 1em; flex-wrap: wrap;">
+                    <template for:each={rev.files} for:item="file">
+                      <img key={file} src={file} style="max-height: 100px;">
+                    </template>
+                  </div>
+                </template>
+                <p class="slds-text-heading_small"
+                  style="border-bottom: 1px solid rgba(0,0,0,0.25); margin-bottom: 0.5em">
+                  Review
+                </p>
+                <lightning-formatted-rich-text value={rev.review.Review_Text__c}>
+                </lightning-formatted-rich-text>
+              </div>
+
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <template if:false={filteredReviews.length}>
+        <div class="slds-box slds-theme_default slds-m-horizontal_small">
+          <p class="slds-text-heading_medium">No Reviews By Other Users</p>
+        </div>
+      </template>
+    </lightning-card>
+
+    <c-quill-toast sticky="true" timeout="3000"></c-quill-toast>
+
+    <template if:true={isLoading}>
+      <c-quill-spinner position="absolute"></c-quill-spinner>
+    </template>
+
+  </div>
+</template>

@@ -10,10 +10,24 @@
 }
 
 .hoverable{
-    transition: box-shadow 0.15s ease-in-out;
+    /* -webkit-transition : -webkit-filter 0.15s ease-in-out; */
+    transition: all 0.15s ease-in-out;
     cursor: pointer;
 }
 
 .hoverable:hover{
+    /* filter: drop-shadow(5px 5px 5px rgba(0,0,0, 0.8)); */
     box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+}
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; 
+    line-clamp: 2; 
+    overflow: hidden; 
+}
+
+.doc-shape{
+    clip-path: polygon(0% 0%, 80% 0%, 100% 20%, 100% 100%, 0% 100%);
 }
