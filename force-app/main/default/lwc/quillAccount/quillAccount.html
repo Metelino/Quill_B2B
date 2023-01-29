@@ -1,0 +1,19 @@
+<template>
+  <lightning-layout horizontal-align="center" style="margin: 3em 0">
+    <lightning-layout-item size="10" class="shadow">
+      <lightning-tabset variant="vertical">
+        <lightning-tab label="Order History">
+          <c-quill-order-history
+            onrefresh={refreshCases}
+          ></c-quill-order-history>
+        </lightning-tab>
+        <lightning-tab label="Placed Cases">
+          <c-quill-cases></c-quill-cases>
+        </lightning-tab>
+        <lightning-tab label="Recurring Orders">
+          <c-quill-recurring-orders></c-quill-recurring-orders>
+        </lightning-tab>
+      </lightning-tabset>
+    </lightning-layout-item>
+  </lightning-layout>
+</template>

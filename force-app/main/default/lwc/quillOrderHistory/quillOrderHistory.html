@@ -1,0 +1,134 @@
+<template>
+  <template for:each={orders} for:item="order">
+    <div
+      style="margin-bottom: 1em; position: relative"
+      class="slds-box slds-theme_default shadow"
+      key={order.id}
+    >
+      <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
+        <span class="slds-text-heading_small">
+          Order Number: <b>{order.OrderNumber}</b> </span
+        ><br />
+        <span>Status: <b>{order.Status}</b></span
+        ><br />
+        <span>Order Issuing Date: <b>{order.EffectiveDate}</b></span>
+        <button
+          type="button"
+          class="slds-button slds-button_neutral"
+          style="position: absolute; top: 1em; right: 1em"
+          data-id={order.Id}
+          onclick={openCaseModal}
+        >
+          Create Case
+        </button>
+      </p>
+
+      <table
+        class="slds-box slds-table slds-table_cell-buffer slds-text-body_regular slds-table_bordered slds-no-row-hover slds-table_header-hidden"
+        style="margin-top: 1em"
+      >
+        <tbody>
+          <template for:each={order.OrderItems.records} for:item="item">
+            <tr key={item.Product2.Id}>
+              <td>
+                <img src={item.Product2.DisplayUrl} style="max-width: 50px" />
+              </td>
+              <td>
+                <a data-id={item.Product2Id} onclick={navigateToDetail}
+                  >{item.Product2.Name}</a
+                >
+              </td>
+              <td style="text-align: right">
+                {item.Quantity} x {item.UnitPrice} &euro;
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+  <template if:true={caseOrder}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      style="z-index: 200"
+      class="slds-modal slds-fade-in-open slds-modal_medium"
+    >
+      <div class="slds-modal__container" style="position: relative">
+        <div class="slds-modal__header">
+          <h1
+            id="modal-heading-01"
+            class="slds-modal__title slds-hyphenate"
+            style="text-align: left"
+          >
+            New Case Form
+          </h1>
+        </div>
+        <div
+          class="slds-modal__content slds-p-around_medium"
+          id="modal-content-id-1"
+        >
+          <form name="case-form" onchange={caseFormChange}>
+            <div class="slds-form-element slds-form-element_readonly">
+              <span class="slds-form-element__label">Order Number</span>
+              <div class="slds-form-element__control">
+                <div class="slds-form-element__static">
+                  {caseOrder.OrderNumber}
+                </div>
+              </div>
+            </div>
+            <lightning-input
+              name="subject"
+              type="text"
+              label="Case Subject"
+              placeholder="Subject..."
+              required
+            ></lightning-input>
+            <lightning-textarea
+              name="description"
+              label="Case Description"
+              placeholder="Description..."
+              required
+            ></lightning-textarea>
+            <lightning-combobox
+              name="product"
+              dropdown-alignment="auto"
+              label="Related Product"
+              placeholder="No Product"
+              options={caseOrder.productOptions}
+            >
+            </lightning-combobox>
+          </form>
+        </div>
+        <div class="slds-modal__footer">
+          <button
+            class="slds-button slds-button_neutral"
+            onclick={closeCaseModal}
+          >
+            Cancel
+          </button>
+          <button
+            class="slds-button slds-button_brand"
+            onclick={placeCase}
+            disabled={isSaveOrderDisabled}
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </section>
+    <div
+      class="slds-backdrop slds-backdrop_open"
+      style="z-index: 100"
+      role="presentation"
+    ></div>
+  </template>
+
+  <template if:true={isLoading}>
+    <c-quill-spinner position="fixed"></c-quill-spinner>
+  </template>
+
+  <c-quill-toast sticky="false" timeout="3000"></c-quill-toast>
+</template>
