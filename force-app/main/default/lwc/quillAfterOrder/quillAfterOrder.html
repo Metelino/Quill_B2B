@@ -1,0 +1,66 @@
+<template>
+  <div style="margin: 3em 0px">
+    <div class="slds-is-relative">
+      <template if:true={isLoading}>
+        <lightning-spinner
+          alternative-text="Loading"
+          variant="brand"
+        ></lightning-spinner>
+      </template>
+      <lightning-layout horizontal-align="center">
+        <lightning-layout-item size="10">
+          <p style="padding: 1em; border-bottom: 1px solid rgba(0, 0, 0, 0.25)">
+            <span class="slds-text-heading_medium">Order Summary</span>
+          </p>
+          <p
+            style="
+              padding: 1em;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+              margin-bottom: 1em;
+            "
+          >
+            <span>Order Number: <b>{order.Id}</b></span
+            ><br />
+            <span>Order Placement Date: <b>{order.EffectiveDate}</b></span
+            ><br />
+            <span>Total Price: <b>{order.TotalAmount} &euro;</b></span>
+          </p>
+
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th></th>
+                <th>
+                  <div class="slds-truncate" title="Product Name">
+                    Product Name
+                  </div>
+                </th>
+                <th>
+                  <div class="slds-truncate" title="Amount">Amount</div>
+                </th>
+                <th>
+                  <div class="slds-truncate" title="Amount">Total</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={orderItems} for:item="orderItem">
+                <tr key={orderItem.Product2.Name}>
+                  <td>
+                    <img
+                      src={orderItem.Product2.DisplayUrl}
+                      style="max-width: 50px"
+                    />
+                  </td>
+                  <td>{orderItem.Product2.Name}</td>
+                  <td>{orderItem.Quantity} x {orderItem.UnitPrice} &euro;</td>
+                  <td>{orderItem.TotalPrice} &euro;</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </lightning-layout-item>
+      </lightning-layout>
+    </div>
+  </div>
+</template>

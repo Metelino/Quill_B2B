@@ -1,0 +1,168 @@
+<template>
+  <div style="position: relative; margin: 3em 0">
+    <template if:true={productsList.length}>
+      <lightning-layout horizontal-align="center" multiple-rows>
+        <lightning-layout-item size="7" padding="around-small">
+          <p
+            class="slds-text-heading_medium"
+            style="
+              padding: 0.5em;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+              margin-bottom: 1em;
+            "
+          >
+            Order Summary
+          </p>
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th></th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Product Name">
+                    Product Name
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Amount">Amount</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Price">Total</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template for:each={productsList} for:item="item">
+                <tr key={item.product.Id}>
+                  <td>
+                    <img
+                      src={item.product.DisplayUrl}
+                      style="max-width: 50px"
+                    />
+                  </td>
+                  <td>{item.product.Name}</td>
+                  <td>{item.amount} x {item.price} &euro;</td>
+                  <td>{item.total} &euro;</td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </lightning-layout-item>
+        <lightning-layout-item size="3" padding="around-small">
+          <div style="position: sticky; top: 20vh; width: 100%">
+            <p
+              class="slds-text-heading_medium"
+              style="
+                padding: 0.5em;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+                margin-bottom: 0.5em;
+              "
+            >
+              Total Price: <b>{totalPrice} &euro;</b>
+            </p>
+            <lightning-input
+              type="checkbox"
+              label="Monthly Subscription"
+              onchange={setRecurringOrder}
+            ></lightning-input>
+            <button
+              type="button"
+              class="slds-button slds-button_success slds-button_stretch"
+              onclick={showSummary}
+            >
+              Place Order
+            </button>
+          </div>
+        </lightning-layout-item>
+      </lightning-layout>
+    </template>
+    <template if:false={productsList.length}>
+      <lightning-layout horizontal-align="center">
+        <lightning-layout-item size="10">
+          <p
+            class="slds-text-heading_medium"
+            style="
+              padding: 0.5em;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+              margin-bottom: 1em;
+            "
+          >
+            Order Summary
+          </p>
+          <div class="slds-box slds-theme_default">
+            <p class="slds-text-heading_medium">No Products In Cart</p>
+            <p class="slds-text-heading_small">
+              Add More Products Before Placing An Order
+            </p>
+          </div>
+        </lightning-layout-item>
+      </lightning-layout>
+      <c-quill-top-products></c-quill-top-products>
+    </template>
+
+    <template if:true={doesShowSummary}>
+      <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        style="z-index: 200"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+      >
+        <div class="slds-modal__container" style="position: relative">
+          <div class="slds-modal__header">
+            <h1
+              id="modal-heading-01"
+              class="slds-modal__title slds-hyphenate"
+              style="text-align: left"
+            >
+              Order Summary
+            </h1>
+          </div>
+
+          <template if:true={isConfirmed}>
+            <div class="slds-modal__content slds-p-around_medium">
+              <c-quill-after-order></c-quill-after-order>
+            </div>
+            <div class="slds-modal__footer">
+              <button
+                class="slds-button slds-button_brand"
+                onclick={navigateToAccount}
+              >
+                Complete Order
+              </button>
+            </div>
+          </template>
+
+          <template if:false={isConfirmed}>
+            <div class="slds-modal__content slds-p-around_medium">
+              <p>Do you want to place the order?</p>
+            </div>
+            <div class="slds-modal__footer">
+              <button
+                class="slds-button slds-button_neutral"
+                aria-label="Cancel and close"
+                onclick={closeSummary}
+              >
+                Cancel
+              </button>
+              <button
+                class="slds-button slds-button_brand"
+                onclick={makeNewOrder}
+              >
+                Confirm Order
+              </button>
+            </div>
+          </template>
+        </div>
+      </section>
+      <div
+        class="slds-backdrop slds-backdrop_open"
+        style="z-index: 100"
+        role="presentation"
+      ></div>
+    </template>
+
+    <template if:true={isLoading}>
+      <c-quill-spinner></c-quill-spinner>
+    </template>
+  </div>
+</template>
