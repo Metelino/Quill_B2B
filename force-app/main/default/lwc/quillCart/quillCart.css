@@ -1,0 +1,21 @@
+td {
+  text-align: center;
+}
+
+th {
+  text-align: center;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  text-align: center;
+}
+
+lightning-button-icon {
+  border-radius: 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
