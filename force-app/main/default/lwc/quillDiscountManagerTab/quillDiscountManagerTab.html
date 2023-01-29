@@ -1,0 +1,122 @@
+<template>
+  <div style="position: relative">
+    <lightning-layout>
+      <lightning-layout-item size="4" padding="around-small">
+        <lightning-card
+          title="Available Pricebooks"
+          icon-name="utility:knowledge_base"
+        >
+          <div
+            class="slds-m-around_small slds-scrollable_y"
+            style="height: 30vh"
+          >
+            <table
+              class="slds-table slds-table_cell-buffer slds-table_bordered"
+            >
+              <thead>
+                <tr class="slds-line-height_reset">
+                  <th>
+                    <div class="slds-truncate">Pricebook Name</div>
+                  </th>
+                  <th>Active</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={pricebooks} for:item="pricebook">
+                  <tr key={pricebook.Id}>
+                    <td class="slds-truncate">
+                      <a
+                        data-id={pricebook.Id}
+                        style="cursor: pointer"
+                        onclick={selectPricebook}
+                        >{pricebook.Name}</a
+                      >
+                    </td>
+                    <td>
+                      <lightning-input
+                        style="pointer-events: none"
+                        type="checkbox"
+                        checked={pricebook.IsActive}
+                      ></lightning-input>
+                    </td>
+                    <td class="slds-cell_action-mode" role="gridcell">
+                      <lightning-button-menu icon-name="utility:down">
+                        <lightning-menu-item
+                          data-id={pricebook.Id}
+                          label="Set As Active"
+                          disabled={pricebook.IsActive}
+                          onclick={setActivePricebook}
+                        ></lightning-menu-item>
+                        <lightning-menu-item
+                          data-id={pricebook.Id}
+                          disabled={pricebook.IsActive}
+                          onclick={delPricebook}
+                          label="Delete"
+                        ></lightning-menu-item>
+                      </lightning-button-menu>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </lightning-card>
+
+        <div style="margin-top: 1em">
+          <lightning-card
+            title="New Pricebook"
+            class="slds-m-top_medium"
+            icon-name="utility:note"
+          >
+            <div class="slds-m-around_small">
+              <input
+                type="text"
+                class="slds-input slds-m-bottom_small"
+                id="x"
+                placeholder="Pricebook Name"
+                name="pricebook-name"
+              />
+              <button
+                class="slds-button slds-button_neutral slds-button_stretch"
+                name="pricebook-name"
+                onclick={createPricebook}
+              >
+                Create New Pricebook
+              </button>
+            </div>
+          </lightning-card>
+        </div>
+      </lightning-layout-item>
+
+      <lightning-layout-item size="8" padding="around-small">
+        <lightning-card
+          title="Pricebook Details"
+          icon-name="utility:multi_picklist"
+        >
+          <lightning-tabset>
+            <lightning-tab label="Standard Prices" value="standard">
+              <c-quill-pricebook-standard
+                onupdatepricebook={updateStandardPrices}
+                standard-book={standardPricebook}
+              >
+              </c-quill-pricebook-standard>
+            </lightning-tab>
+            <lightning-tab label={selectedPricebookName} value="custom">
+              <c-quill-pricebook-custom
+                onupdatepricebook={updateCustomPrices}
+                custom-book={selectedPricebook}
+                standard-book={standardPricebook}
+              >
+              </c-quill-pricebook-custom>
+            </lightning-tab>
+          </lightning-tabset>
+        </lightning-card>
+      </lightning-layout-item>
+    </lightning-layout>
+  </div>
+
+  <template if:true={isLoading}>
+    <c-quill-spinner></c-quill-spinner>
+  </template>
+</template>

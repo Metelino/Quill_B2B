@@ -1,0 +1,52 @@
+<template>
+  <div class="slds-m-horizontal_medium">
+    <template if:true={pricebook}>
+      <div class="slds-scrollable_y" style="max-height: 60vh">
+        <table
+          class="slds-table slds-table_cell-buffer slds-table_bordered"
+          style="width: 100%"
+        >
+          <thead>
+            <tr class="slds-line-height_reset">
+              <th class="" scope="col">
+                <div>Product Name</div>
+              </th>
+              <th class="" scope="col">
+                <div>Price</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              for:each={pricebook.PricebookEntries.records}
+              for:item="item"
+            >
+              <tr key={item.Id}>
+                <td>
+                  <span>{item.Product2.Name}</span>
+                </td>
+                <td>
+                  <input
+                    data-id={item.Id}
+                    class="slds-input"
+                    type="number"
+                    step="0.01"
+                    value={item.UnitPrice}
+                    onchange={changeStandardPrice}
+                  />
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </template>
+    <button
+      type="button"
+      class="slds-m-top_small slds-button slds-button_neutral slds-button_stretch"
+      onclick={updatePricebook}
+    >
+      Update Standard Prices
+    </button>
+  </div>
+</template>
